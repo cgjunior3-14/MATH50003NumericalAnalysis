@@ -37,7 +37,7 @@ compilenotes("A.Integers")
 # Sheets
 ####
 
-for k = 1:2
+for k = 1:3
     compilesheet(k)
 end
 
@@ -49,7 +49,7 @@ end
 ####
 # Labs
 ####
-for k = 1:2
+for k = 1:3
     compilelab(k)
     compilelabdemo(k)
 end

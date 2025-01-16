@@ -1,75 +1,7 @@
 **Numerical Analysis MATH50003 (2023–24) Problem Sheet 3**
 
-**Problem 1** With 8-bit unsigned integers, what is the result for the following computations:
-$$
-127 ⊕_{256} 200,\quad 2 ⊗_{256} 127,\quad 2 ⊗_{256} 128, \quad 0 ⊖_{256} 1
-$$
 
-**SOLUTION**
-$$
-127 ⊕_{256} 200 = 327\ ({\rm mod} 256) = 71
-$$
-$$
-2 ⊗_{256} 127 = 254
-$$
-$$
-2 ⊗_{256} 128 = 256 \ ({\rm mod} 256) = 0
-$$
-$$
-0 ⊖_{256} 1 = -1  \ ({\rm mod} 256) = 255.
-$$
-
-
-
-**END**
-
-**Problem 2(a)** With 8-bit signed integers, what are the bits for the following: $10, 120, -10$.
-
-**SOLUTION**
-We can find the binary digits by repeatedly subtracting the largest power of 2 less than a number
-until we reach 0, e.g. $10 - 2^3 - 2 = 0$
-implies $10 = (1010)_2$.
-Thus the bits are: `00001010`.
-Similarly,
-$$
-120 = 2^6 + 2^5 + 2^4 + 2^3 = (1111000)_2
-$$
-Thus the bits are `01111000`.
-For negative numbers we perform the same trick but adding $2^p$ to make it positive, e.g.,
-$$
--10 = 2^8 - 10 ({\rm mod 2^8}) = 246 = 2^7 + 2^6 + 2^5 + 2^4 + 2^2 + 2 = (11110110)_2
-$$
-This the bits are: `11110110`.
-**END**
-
-**Problem 2(b)** With 8-bit signed integers, what is the result for the following computations:
-$$
-127 ⊕_{256}^{\rm s} 200,\quad 2 ⊗_{256}^{\rm s} 127, \quad 2 ⊗_{256}^{\rm s} 128, \quad 0 ⊖_{256}^{\rm s} 1
-$$
-
-**SOLUTION**
-The first and 3rd part are somewhat trick questions since $200$ and $128$ aren't representable using
-8-bit integers, but if we interpret the problem as modulo arithimetic we have:
-
-$$
-127 ⊕_{256}^{\rm s} 200 = 327\ ({\rm mod}^{\rm s} 256) = 71,
-$$
-$$
-2 ⊗_{256}^{\rm s} 127 = 254\ ({\rm mod}^{\rm s} 256) = -2,
-$$
-
-$$
-2 ⊗_{256}^{\rm s} 128 = 256 \ ({\rm mod}^{\rm s} 256) = 0,
-$$
-
-$$
-0 ⊖_{256}^{\rm s} 1 = -1  \ ({\rm mod} 256)^{\rm s} = -1.
-$$
-
-**END**
-
-
-**Problem 3** What is $π$ to 5 binary places? Hint: recall that $π ≈ 3.14$.
+**Problem 1** What is $π$ to 5 binary places? Hint: recall that $π ≈ 3.14$.
 
 **SOLUTION**
 We subtract off powers of two until we get 5 places. Eg we have
@@ -80,7 +12,7 @@ Thus we have $π = (11.001001…)_2$. The question is slightly ambiguous whether
 to 5 digits so either `11.00100` or `11.00101` would be acceptable.
 **END**
 
-**Problem 4** What are the single precision $F_{32} = F_{127,8,23}$ floating point representations for the following: 
+**Problem 2** What are the single precision $F_{32} = F_{127,8,23}$ floating point representations for the following: 
 $$
 2, \quad 31, \quad 32, \quad 23/4, \quad (23/4)\times 2^{100}
 $$
@@ -134,7 +66,7 @@ and $229 = (11100101)_2$ giving us:
 **END**
 
 
-**Problem 5** Let $m(y) = \min\{x \in F_{32} : x > y \}$ be the smallest single precision number
+**Problem 3** Let $m(y) = \min\{x \in F_{32} : x > y \}$ be the smallest single precision number
 greater than $y$. What is $m(2) - 2$ and $m(1024) - 1024$? 
 
 **SOLUTION**
@@ -147,3 +79,217 @@ similarly, for $1024 = 2^{10}$ we find that the difference $m(1024) - 1024$ is $
  nextfloat(1024f0) - 1024, 2^(-13)
 ```
 **END**
+
+----
+**Problem 4** Suppose $x = 1.25$ and consider 16-bit floating point arithmetic ($F_{16}$).
+What is the error in approximating $x$ by the nearest float point number ${\rm fl}(x)$?
+What is the error in approximating $2x$, $x/2$, $x + 2$ and $x - 2$ by $2 \otimes x$, $x \oslash 2$, $x ⊕ 2$ and $x \ominus 2$?
+
+**SOLUTION**
+None of these computations have errors since they are all exactly representable as floating point numbers.
+**END**
+
+
+
+**Problem 5** Show that $1/5 = 2^{-3} (1.1001100110011…)_2$.
+What are the exact bits for $1 ⊘ 5$, $1 ⊘ 5 ⊕ 1$ computed
+using  half-precision arithmetic ($F_{16} := F_{15,5,10}$) (using default rounding)?
+
+**SOLUTION**
+
+For the first part we use Geometric series:
+$$
+\meeq{
+ 2^{-3} (1.1001100110\magenta{011…})_2 =  2^{-3} \left(∑_{k=0}^∞ {1 \over 2^{4k}} +
+{1 \over 2} ∑_{k=0}^∞ {1 \over 2^{4k}}\right) \ccr
+= {3 \over 2^4} {1 \over 1-1/2^4} = {3 \over 2^4-1} = {1 \over 5}
+}
+$$
+Write $-3 = 12 - 15$
+hence we have $q = 12 = (01100)_2$.
+Since $1/5$ is below the midpoint (the midpoint would have been the first magenta bit was 1 and all other bits are 0) we round down and hence have the bits:
+$$
+\red{0}\ \green{01100}\ \blue{1001100110}
+$$
+Adding $1$ we get:
+$$
+1 + 2^{-3} * (1.1001100110)_2 = (1.0011001100\magenta{11})_2 ≈ (1.0011001101)_2
+$$
+Here we write the exponent as $0 = 15 - 15$ where $q = 15 = (01111)_2$.
+Thus we have the bits:
+$$
+\red{0}\ \green{01111}\ \blue{0011001101}
+$$
+
+**END**
+
+
+**Problem 6** Prove the following bounds on the _absolute error_ of a floating point calculation
+in idealised floating-point arithmetic $F_{∞,S}$ (i.e., you may assume all operations involve normal floating point numbers):
+$$
+\begin{align*}
+({\rm fl}(1.1) ⊗ {\rm fl}(1.2)) &⊕ {\rm fl}(1.3) = 2.62 + ε_1 \\
+({\rm fl}(1.1) ⊖ 1) & ⊘ {\rm fl}(0.1) = 1 + ε_2
+\end{align*}
+$$
+such that $|ε_1| ≤ 11 ϵ_{\rm m}$ and $|ε_2| ≤ 40 ϵ_{\rm m}$, where $ϵ_{\rm m}$ is
+machine epsilon.
+
+
+**SOLUTION**
+
+The first problem is very similar to what we saw in lecture. Write
+$$
+({\rm fl}(1.1)⊗ {\rm fl}(1.2)) ⊕ {\rm fl}(1.3) = ( 1.1(1 + δ_1)1.2(1+δ_2)(1+δ_3) + 1.3(1+δ_4))(1+δ_5)
+$$
+where we have $|δ_1|,…,|δ_5| ≤ ϵ_{\rm m}/2$. We first write
+$$
+1.1(1 + δ_1)1.2(1+δ_2)(1+δ_3) = 1.32( 1+ ε_1)
+$$
+where, using the bounds:
+$$
+|δ_1δ_2|,|δ_1δ_3|,|δ_2δ_3| ≤ ϵ_{\rm m}/4, |δ_1δ_2δ_3| ≤ ϵ_{\rm m}/8
+$$
+we find that
+$$
+|ε_1| ≤ |δ_1| + |δ_2| + |δ_3| + |δ_1δ_2| + |δ_1δ_3| + |δ_2δ_3|+ |δ_1δ_2δ_3|
+     ≤ (3/2 + 3/4 + 1/8) ≤ 5/2 ϵ_{\rm m}
+$$
+Then we have
+$$
+1.32 (1 + ε_1) + 1.3 (1 + δ_4) = 2.62 + \underbrace{1.32 ε_1 + 1.3δ_4}_{ε_2}
+$$
+where
+$$
+|ε_2| ≤ (15/4 + 3/4) ϵ_{\rm m} ≤ 5ϵ_{\rm m}.
+$$
+Finally,
+$$
+(2.62 + ε_2)(1+δ_5) = 2.62 + \underbrace{ε_2 + 2.62δ_5 + ε_2 δ_5}_{ε_3}
+$$
+where, using $|ε_2 δ_5| ≤ 3ϵ_{\rm m}$ we get,
+$$
+|ε_3| ≤ (5 + 3/2 + 3) ϵ_{\rm m}  ≤ 10ϵ_{\rm m}.
+$$
+
+For the second part, we do:
+$$
+({\rm fl}(1.1) ⊖ 1) ⊘ {\rm fl}(0.1) = {(1.1 (1 + δ_1) - 1)(1 + δ_2) \over 0.1 (1 + δ_3)} (1 + δ_4)
+$$
+where we have $|δ_1|,…,|δ_4| ≤ ϵ_{\rm m}/2$.
+Write
+$$
+{1 \over 1 + δ_3} = 1 + ε_1
+$$
+where, using that $|δ_3| ≤ ϵ_{\rm m}/2 ≤ 1/2$, we have
+$$
+|ε_1| ≤ \left| {δ_3 \over 1 + δ_3} \right| ≤  {ϵ_{\rm m} \over 2} {1 \over 1 - 1/2} ≤ ϵ_{\rm m}.
+$$
+Further write
+$$
+(1 + ε_1)(1 + δ_4) = 1 + ε_2
+$$
+where
+$$
+|ε_2| ≤ |ε_1| + |δ_4| + |ε_1| |δ_4| ≤ (1 + 1/2 + 1/2) ϵ_{\rm m} =   2ϵ_{\rm m}.
+$$
+We also write
+$$
+{(1.1 (1 + δ_1) - 1)(1 + δ_2) \over 0.1} = 1 + \underbrace{11δ_1 + δ_2 + 11δ_1δ_2}_{ε_3}
+$$
+where
+$$
+|ε_3| ≤ (11/2 + 1/2  + 11/4) ≤ 9 ϵ_{\rm m}
+$$
+Then we get
+$$
+({\rm fl}(1.1) ⊖ 1) ⊘ {\rm fl}(0.1) = (1 + ε_3) (1 + ε_2) =  1 + \underbrace{ε_3 + ε_2 + ε_2 ε_3}_{ε_4}
+$$
+and the error is bounded by:
+$$
+|ε_4| ≤ (9 + 2 + 18) ϵ_{\rm m} ≤ 29 ϵ_{\rm m}.
+$$
+
+**END**
+
+
+
+
+
+
+
+**Problem 7**
+Let $x ∈ [0,1] ∩ F_{∞,S}$.
+Assume that $f^{\rm FP} : F_{∞,S} → F_{∞,S}$ satisfies $f^{\rm FP}(x) = f(x) + δ_x$ where $|δ_x| ≤ c ϵ_{\rm m}$ for all $x ∈ [0,1]$.
+Show that
+$$
+{f^{\rm FP}(x+h) ⊖ f^{\rm FP}(x-h) \over  2h} = f'(x) + ε
+$$
+where absolute error is bounded by
+$$
+|ε| ≤ {|f'(x)| \over 2} ϵ_{\rm m} + {M \over 3} h^2 + {2 c ϵ_{\rm m} \over h},
+$$
+where we assume  that $h = 2^{-n}$ for $n ≤ S$.
+
+**SOLUTION**
+
+In floating point we have
+$$
+\begin{align*}
+{f^{\rm FP}(x + h) ⊖ f^{\rm FP}(x-h) \over 2h} &= {f(x + h) +  δ_{x+h} - f(x-h) - δ_{x-h} \over 2h} (1 + δ_1) \\
+&= {f(x+h) - f(x-h) \over 2h} (1 + δ_1) + {δ_{x+h}- δ_{x-h} \over 2h} (1 + δ_1)
+\end{align*}
+$$
+From PS1 Q4 we get the error term
+$$
+f'(x) = {f(x + h) - f(x-h) \over 2h} + δ^{\rm T}
+$$
+where
+$$
+|δ^{\rm T}| ≤ Mh^2/6.
+$$
+Thus
+$$
+(f^{\rm FP}(x + h) ⊖ f^{\rm FP}(x-h)) / (2h) =
+f'(x) + \underbrace{f'(x) δ_1 - δ^{\rm T} (1 + δ_1) + {δ_{x+h}- δ_{x-h} \over 2h} (1 + δ_1)}_{ε}
+$$
+where
+$$
+|ε| ≤ {|f'(x)| \over 2} ϵ_{\rm m} + {M \over 3} h^2 + {2 c ϵ_{\rm m} \over h}.
+$$
+
+
+**END**
+
+
+**Problem 8(a)** Suppose $|ϵ_k| ≤ ϵ$ and $n ϵ < 1$. Show that
+$$
+∏_{k=1}^n (1+ϵ_k) = 1+θ_n
+$$
+for some constant $θ_n$ satisfying
+$$
+|θ_n| ≤ \underbrace{n ϵ \over 1-nϵ}_{E_{n,ϵ}}
+$$
+Hint: use induction.
+
+
+
+**Problem 8(b)** Show if $x_1,…,x_n ∈ F$ then
+$$
+x_1 ⊗ ⋯ ⊗ x_n = x_1 ⋯ x_n (1 + θ_{n-1})
+$$
+where $|θ_n| ≤ E_{n,ϵ_{\rm m}/2}$, assuming $n ϵ_{\rm m} < 2$.
+You may assume all operations are within the normalised range.
+
+
+
+**Problem 8(c)** Show if $x_1,…,x_n ∈ F$ then
+$$
+x_1 ⊕ ⋯ ⊕ x_n = x_1 +  ⋯ + x_n + σ_n
+$$
+where, for $M = Σ_{k=1}^n |x_k|$, $|σ_n| ≤ M E_{n-1,ϵ_{\rm m}/2},$ assuming $n ϵ_{\rm m} < 2$.
+You may assume all operations are within the normalised range.
+Hint: use Problem 2.1 to first write 
+$$
+x_1 ⊕ ⋯ ⊕ x_n = x_1(1+θ_{n-1}) + ∑_{j=2}^n x_j (1 + θ_{n-j+1}).
+$$
